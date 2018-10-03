@@ -2,6 +2,7 @@ import Vue from 'vue'
 import {
   Vuetify,
   VApp,
+  VDivider,
   VNavigationDrawer,
   VFooter,
   VList,
@@ -16,6 +17,7 @@ import 'vuetify/src/stylus/app.styl'
 Vue.use(Vuetify, {
   components: {
     VApp,
+    VDivider,
     VNavigationDrawer,
     VFooter,
     VList,
