@@ -33,7 +33,7 @@ export default {
       {
         title: 'Inicio',
         icon: 'fas fa-home',
-        path: '/'
+        path: '/home'
       },
       {
         title: 'Tu biblioteca',
