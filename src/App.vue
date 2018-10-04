@@ -54,7 +54,7 @@ export default {
         path: '/exit'
       }
     ]
-  }),
+  })
 }
 
 </script>
