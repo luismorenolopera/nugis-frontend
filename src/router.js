@@ -6,6 +6,7 @@ import Library from '@/views/Library.vue'
 import Search from '@/views/Search.vue'
 import Upload from '@/views/Upload.vue'
 import Login from '@/views/Login.vue'
+import Logout from '@/views/Logout.vue'
 import SignUp from '@/views/SignUp.vue'
 import Landing from '@/views/Landing.vue'
 
@@ -51,6 +52,12 @@ const router = new Router({
       path: '/login',
       name: 'login',
       component: Login
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: Logout,
+      meta: { requiresAuth: true }
     }
   ]
 })
@@ -58,13 +65,20 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!auth.loggedIn()) {
+      // this route requires auth, check if logged in
+      // if not, redirect to landing page.
       next({
         path: '/'
       })
-      return
+    } else {
+      next()
     }
+  } else {
+    // if is logged but the route not require login
+    next({
+      path: '/home'
+    })
   }
-  next()
 })
 
 export default router

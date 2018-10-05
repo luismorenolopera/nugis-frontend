@@ -54,7 +54,7 @@ export default {
       {
         title: 'Salir',
         icon: 'fas fa-sign-out-alt',
-        path: '/exit'
+        path: '/logout'
       }
     ]
   }),

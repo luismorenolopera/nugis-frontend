@@ -11,11 +11,11 @@ v-container
     v-card-title(class='headline') Login
     v-container
       v-text-field(v-model='username'
-                    label='Usuario'
-                    v-validate="'required'"
-                    name='usuario'
-                    :error-messages="errors.collect('usuario')"
-                    @keyup.enter='validate')
+                   label='Usuario'
+                   v-validate="'required'"
+                   name='usuario'
+                   :error-messages="errors.collect('usuario')"
+                   @keyup.enter='validate')
       v-text-field(v-model='password'
                    label='Contraseña'
                    v-validate="'required'"
@@ -56,7 +56,6 @@ export default {
         username: this.username,
         password: this.password
       }).then((response) => {
-        this.loading = false
         let token = response.data['token']
         localStorage.token = token
         this.$router.push('/home')
