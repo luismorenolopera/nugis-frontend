@@ -57,10 +57,15 @@ export default {
         password: this.password
       }).then((response) => {
         this.loading = false
-        console.log(response.data)
+        let token = response.data['token']
+        localStorage.token = token
+        this.$router.push('/home')
+        this.$store.commit('setToken', { token: token })
+        location.reload()
       }).catch((e) => {
         this.loading = false
-        console.log(e.response)
+        this.errorMessage = 'Las credenciales no coinciden'
+        this.error = true
       })
     }
   }

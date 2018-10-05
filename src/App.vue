@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app(dark)
+  v-app(v-if='token' dark)
     v-navigation-drawer(v-model='drawer' clipped fixed app)
       v-list(dense v-for='(item, index) in items' :key='index')
         router-link(v-if='item.path' :to='item.path')
@@ -16,9 +16,12 @@
       router-view
     v-footer(app fixed)
       span © Nugis - 2018
+  v-app(v-else dark)
+    router-view
 </template>
 
 <script>
+import { mapState } from 'vuex'
 
 export default {
   name: 'App',
@@ -54,7 +57,10 @@ export default {
         path: '/exit'
       }
     ]
-  })
+  }),
+  computed: {
+    ...mapState(['token'])
+  }
 }
 
 </script>
