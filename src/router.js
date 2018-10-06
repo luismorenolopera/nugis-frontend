@@ -62,6 +62,7 @@ const router = new Router({
   ]
 })
 
+// requiresAuth Guard
 router.beforeEach((to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!auth.loggedIn()) {
@@ -75,9 +76,7 @@ router.beforeEach((to, from, next) => {
     }
   } else {
     // if is logged but the route not require login
-    next({
-      path: '/home'
-    })
+    next()
   }
 })
 
