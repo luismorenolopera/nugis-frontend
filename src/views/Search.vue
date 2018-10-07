@@ -16,13 +16,10 @@
         v-flex(
           v-for='track in tracks'
           :key='track.id'
-          xs6 sm4
+          xs12 sm6
         )
           v-card
-            v-img(
-              :src='track.thumbnail'
-              aspect-ratio='1'
-            )
+            aplayer(:music='audio')
             v-card-actions
               v-spacer
               v-btn(icon)
@@ -33,12 +30,17 @@
 
 <script>
 import { HTTP } from '@/http-common.js'
+import Aplayer from 'vue-aplayer'
 
 export default {
   name: 'Search',
+  components: {
+    Aplayer
+  },
   data: () => ({
     searchValue: '',
-    tracks: []
+    tracks: [],
+    audio: { src: 'http://nugis.ddns.net/media/documents/music/OFy0hZhIDyM.mp3' }
   }),
   methods: {
     search () {
