@@ -19,7 +19,7 @@
           xs12 sm6
         )
           v-card
-            aplayer(:music='audio')
+            aplayer(:music='track')
             v-card-actions
               v-spacer
               v-btn(icon)
@@ -39,18 +39,40 @@ export default {
   },
   data: () => ({
     searchValue: '',
-    tracks: [],
-    audio: { src: 'http://nugis.ddns.net/media/documents/music/OFy0hZhIDyM.mp3' }
+    tracks: []
   }),
   methods: {
     search () {
       let url = `music/tracks/?search=${this.searchValue}`
       HTTP.get(url).then(response => {
         console.log(response.data)
-        this.tracks = response.data.results
+        this.tracks = this.setTracks(response.data.results)
       }).catch(e => {
         console.log(e.response)
       })
+    },
+    setTracks (tracks) {
+      var list = []
+      tracks.map(track => {
+        track.artistTrack = track.artists[0]
+        let {
+          file: src,
+          thumbnail: pic,
+          title,
+          artistTrack: artist
+        } = { ...track }
+        let newTrack = Object.assign(
+          {},
+          {
+            src,
+            pic,
+            title,
+            artist
+          }
+        )
+        list.push(newTrack)
+      })
+      return list
     }
   }
 }
