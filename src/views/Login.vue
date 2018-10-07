@@ -40,7 +40,7 @@ export default {
     show: false,
     loading: false,
     error: false,
-    errorMessage: ''
+    errorMessage: null
   }),
   methods: {
     validate () {

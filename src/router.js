@@ -1,6 +1,6 @@
 import Vue from 'vue'
-import auth from '@/auth'
 import Router from 'vue-router'
+import auth from '@/auth'
 import Home from '@/views/Home.vue'
 import Library from '@/views/Library.vue'
 import Search from '@/views/Search.vue'
