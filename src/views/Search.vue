@@ -20,12 +20,12 @@
         )
           v-card
             aplayer(:music='track')
-            v-card-actions
+            v-card-actions(class='pa-0')
               v-spacer
               v-btn(icon)
-                v-icon fas fa-plus
+                v-icon(size='18') fas fa-plus
               v-btn(icon)
-                v-icon fas fa-heart
+                v-icon(size='18') fas fa-heart
 </template>
 
 <script>
@@ -54,7 +54,11 @@ export default {
     setTracks (tracks) {
       var list = []
       tracks.map(track => {
-        track.artistTrack = track.artists[0]
+        try {
+          track.artistTrack = track.artists[0].alias
+        } catch (err) {
+          track.artistTrack = 'Desconocido'
+        }
         let {
           file: src,
           thumbnail: pic,
