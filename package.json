@@ -13,6 +13,7 @@
     "@babel/polyfill": "^7.0.0-rc.1",
     "@fortawesome/fontawesome-free": "^5.2.0",
     "axios": "^0.18.0",
+    "epic-spinners": "^1.0.3",
     "hls.js": "^0.11.0",
     "roboto-fontface": "*",
     "vee-validate": "^2.1.0-beta.9",
