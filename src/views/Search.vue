@@ -53,7 +53,6 @@ export default {
   }),
   methods: {
     search () {
-      this.tracks = []
       this.loading = true
       let url = `music/tracks/?search=${this.searchValue}`
       HTTP.get(url).then(response => {

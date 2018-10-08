@@ -13,6 +13,7 @@ import {
   VImg,
   VGrid,
   VProgressLinear,
+  VTabs,
   VTextField,
   VToolbar,
   transitions
@@ -33,6 +34,7 @@ Vue.use(Vuetify, {
     VImg,
     VGrid,
     VProgressLinear,
+    VTabs,
     VTextField,
     VToolbar,
     transitions

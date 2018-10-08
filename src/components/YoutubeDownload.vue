@@ -1,9 +1,9 @@
 <template lang="pug">
-  h1 Library
+  h1 youtubedl component
 </template>
 
 <script>
 export default {
-  name: 'Library'
+  name: 'YoutubeDownload'
 }
 </script>
