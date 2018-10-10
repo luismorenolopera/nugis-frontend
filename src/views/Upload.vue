@@ -2,6 +2,7 @@
   v-tabs(
     centered
     icons-and-text
+    grow
   )
     v-tabs-slider
     v-tab(href='#tab-1') YOUTUBE
