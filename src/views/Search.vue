@@ -3,7 +3,8 @@
     //- search input
     v-text-field(
       v-model='searchValue'
-      box label='Buscar'
+      box
+      label='Buscar'
       append-icon='fas fa-search'
       clearable
       clear-icon='fas fa-times'
@@ -53,7 +54,6 @@ export default {
   }),
   methods: {
     search () {
-      this.tracks = []
       this.loading = true
       let url = `music/tracks/?search=${this.searchValue}`
       HTTP.get(url).then(response => {
