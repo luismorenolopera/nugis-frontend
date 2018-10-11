@@ -8,9 +8,20 @@
       append-icon='fas fa-search'
       clearable
       clear-icon='fas fa-times'
-      @keyup.enter='search'
-      @click:append='search'
+      @keyup.enter='validate()'
+      @click:append='validate()'
     )
+    //- error
+    v-snackbar(
+      v-model='error'
+      :bottom='true'
+      :timeout='5000'
+    ) {{ errorMessage }}
+      v-btn(
+        color='pink'
+        flat
+        @click='error = false'
+      ) Cerrar
     //- result video
     v-flex(v-if='track' xs12)
       v-card
@@ -27,12 +38,13 @@
         v-divider(light)
         v-card-actions
           v-spacer
-          v-btn DESCARGAR
+          v-btn(v-if='!track.file' @click='download()') DESCARGAR
             v-icon(right) fas fa-cloud-download-alt
+          audio(v-else controls)
+            source(:src='track.file' type='audio/mpeg')
     //- loader
-    v-layout(v-else justify-center)
+    v-layout(v-else-if='loading' justify-center)
       atom-spinner(
-        v-if='loading'
         :size='60'
         :animation-duration='800'
         color='#ff1d5e'
@@ -50,22 +62,50 @@ export default {
   },
   data: () => ({
     searchValue: '',
+    error: false,
+    errorMessage: '',
     track: null,
     loading: false
   }),
   methods: {
-    validate () {
-
-    },
-    search () {
+    download () {
       this.loading = true
+      var idVideo = this.track.id
       this.track = null
-      let url = `music/yt_upload?id=${this.searchValue}`
-      HTTP.get(url).then(response => {
+      HTTP.post('music/yt_upload', {
+        id: idVideo
+      }).then(response => {
+        this.track = response.data
         this.loading = false
         console.log(response)
-        this.track = response.data
       }).catch(e => {
+        this.error = true
+        this.errorMessage = 'No es posible descargar este video en este momento'
+        console.log(e)
+      })
+    },
+    validate () {
+      let params = this.searchValue.split('https://www.youtube.com/watch')
+      let urlSearch = new URLSearchParams(params[1])
+      let idVideo = urlSearch.get('v')
+      if (idVideo) {
+        this.search(idVideo)
+      } else {
+        this.error = true
+        this.errorMessage = 'No es una url valida'
+      }
+    },
+    search (idVideo) {
+      this.loading = true
+      this.track = null
+      let url = `music/yt_upload?id=${idVideo}`
+      HTTP.get(url).then(response => {
+        console.log(response)
+        this.track = response.data
+        this.loading = false
+      }).catch(e => {
+        this.error = true
+        this.errorMessage = 'Este video no existe'
         this.loading = false
         console.log(e)
       })
