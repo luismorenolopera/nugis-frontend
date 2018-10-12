@@ -11,16 +11,16 @@
       @keyup.enter='validate()'
       @click:append='validate()'
     )
-    //- error
+    //- snackbar
     v-snackbar(
-      v-model='error'
+      v-model='snackbar'
       :bottom='true'
       :timeout='5000'
-    ) {{ errorMessage }}
+    ) {{ snackbarMessage }}
       v-btn(
         color='pink'
         flat
-        @click='error = false'
+        @click='snackbar = false'
       ) Cerrar
     //- result video
     v-flex(v-if='track' xs12)
@@ -62,8 +62,8 @@ export default {
   },
   data: () => ({
     searchValue: '',
-    error: false,
-    errorMessage: '',
+    snackbar: false,
+    snackbarMessage: '',
     track: null,
     loading: false
   }),
@@ -79,8 +79,8 @@ export default {
         this.loading = false
         console.log(response)
       }).catch(e => {
-        this.error = true
-        this.errorMessage = 'No es posible descargar este video en este momento'
+        this.snackbar = true
+        this.snackbarMessage = 'No es posible descargar este video en este momento'
         console.log(e)
       })
     },
@@ -91,8 +91,8 @@ export default {
       if (idVideo) {
         this.search(idVideo)
       } else {
-        this.error = true
-        this.errorMessage = 'No es una url valida'
+        this.snackbar = true
+        this.snackbarMessage = 'No es una url valida'
       }
     },
     search (idVideo) {
@@ -104,8 +104,8 @@ export default {
         this.track = response.data
         this.loading = false
       }).catch(e => {
-        this.error = true
-        this.errorMessage = 'Este video no existe'
+        this.snackbar = true
+        this.snackbarMessage = 'Este video no existe'
         this.loading = false
         console.log(e)
       })
