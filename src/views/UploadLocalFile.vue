@@ -11,6 +11,13 @@
           flat
           @click='snackbar = false'
         ) Cerrar
+    //- loader
+    v-layout(v-if='loading' justify-center)
+      atom-spinner(
+        :size='60'
+        :animation-duration='800'
+        color='#ff1d5e'
+      )
     //- form
     v-layout(row wrap)
       v-flex(xs12)
@@ -25,7 +32,7 @@
         )
       v-flex(xs12)
         v-text-field(
-          v-model='image'
+          v-model='thumbnail'
           name='imagen'
           label='Imagen'
           counter
@@ -60,14 +67,21 @@
 </template>
 
 <script>
+import { HTTP } from '@/http-common.js'
+import { AtomSpinner } from 'epic-spinners'
+
 export default {
   name: 'UploadLocalFile',
+  components: {
+    AtomSpinner
+  },
   data: () => ({
     title: '',
-    image: '',
+    thumbnail: '',
     file: null,
     snackbar: false,
-    snackbarMessage: ''
+    snackbarMessage: '',
+    loading: false
   }),
   methods: {
     openFileDialog () {
@@ -77,7 +91,11 @@ export default {
       this.file = e.target.files[0]
       if (this.file.type !== 'audio/mp3') {
         this.snackbar = true
-        this.snackbarMessage = 'solo se permiten archivos mp3'
+        this.snackbarMessage = 'Solo se permiten archivos mp3'
+        this.file = null
+      } else if (this.file.size > 10000000) {
+        this.snackbar = true
+        this.snackbarMessage = 'El archivo no puede superar los 10MB'
         this.file = null
       }
     },
@@ -89,7 +107,19 @@ export default {
       })
     },
     saveTrack () {
-      console.log('save')
+      this.loading = true
+      let body = new FormData()
+      let url = 'music/tracks/'
+      body.append('title', this.title)
+      body.append('thumbnail', this.thumbnail)
+      body.append('file', this.file)
+      HTTP.post(url, body).then(response => {
+        this.loading = false
+        console.log(response)
+      }).catch(e => {
+        this.loading = false
+        console.log(e)
+      })
     }
   }
 }

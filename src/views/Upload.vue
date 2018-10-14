@@ -6,14 +6,14 @@
   )
     v-tabs-slider
     //- tabs ui
-    v-tab(href='#tab-1') YOUTUBE
+    v-tab(href='#upload/youtube') YOUTUBE
       v-icon fab fa-youtube
-    v-tab(href='#tab-2') ARCHIVO LOCAL
+    v-tab(href='#upload/localfile') ARCHIVO LOCAL
       v-icon fas fa-file-upload
     //- tabs views
-    v-tab-item(id='tab-1')
+    v-tab-item(id='upload/youtube')
       youtube-download
-    v-tab-item(id='tab-2')
+    v-tab-item(id='upload/localfile')
       upload-local-file
 </template>
 
