@@ -5,23 +5,27 @@
     grow
   )
     v-tabs-slider
-    v-tab(href='#tab-1') YOUTUBE
+    //- tabs ui
+    v-tab(href='#upload/youtube') YOUTUBE
       v-icon fab fa-youtube
-    v-tab(href='#tab-2') ARCHIVO LOCAL
+    v-tab(href='#upload/localfile') ARCHIVO LOCAL
       v-icon fas fa-file-upload
-    v-tab-item(id='tab-1')
+    //- tabs views
+    v-tab-item(id='upload/youtube')
       youtube-download
-    v-tab-item(id='tab-2')
-      h1 basic upload
+    v-tab-item(id='upload/localfile')
+      upload-local-file
 </template>
 
 <script>
-import YoutubeDownload from '@/components/YoutubeDownload.vue'
+import YoutubeDownload from '@/views/YoutubeDownload.vue'
+import UploadLocalFile from '@/views/UploadLocalFile.vue'
 
 export default {
   name: 'Upload',
   components: {
-    YoutubeDownload
+    YoutubeDownload,
+    UploadLocalFile
   }
 }
 </script>
