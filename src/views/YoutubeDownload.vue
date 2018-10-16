@@ -85,9 +85,14 @@ export default {
       })
     },
     validate () {
-      let params = this.searchValue.split('https://www.youtube.com/watch')
-      let urlSearch = new URLSearchParams(params[1])
-      let idVideo = urlSearch.get('v')
+      var idVideo = null
+      if (this.searchValue.includes('https://www.youtube.com/watch')) {
+        let params = this.searchValue.split('https://www.youtube.com/watch')
+        let urlSearch = new URLSearchParams(params[1])
+        idVideo = urlSearch.get('v')
+      } else if (this.searchValue.includes('https://youtu.be/')) {
+        idVideo = this.searchValue.split('https://youtu.be/')[1]
+      }
       if (idVideo) {
         this.search(idVideo)
       } else {
