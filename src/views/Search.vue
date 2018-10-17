@@ -20,13 +20,14 @@
           xs12 sm6
         )
           player(:track='track')
-      //- spinner
-      v-layout(v-else justify-center)
-        atom-spinner(
-          :size='60'
-          :animation-duration='800'
-          color='#ff1d5e'
-        )
+      //- loader
+      atom-spinner(
+        v-else
+        :size='150'
+        :animation-duration='800'
+        color='#ff1d5e'
+        class='centered'
+      )
 </template>
 
 <script>
@@ -50,12 +51,10 @@ export default {
       this.loading = true
       let url = `music/tracks/?search=${this.searchValue}`
       HTTP.get(url).then(response => {
-        console.log(response.data)
         this.tracks = response.data.results
         this.loading = false
       }).catch(e => {
         this.loading = false
-        console.log(e.response)
       })
     }
   }
