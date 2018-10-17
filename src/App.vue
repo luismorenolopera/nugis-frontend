@@ -67,7 +67,7 @@ export default {
 
 <style>
 a {
-  color: inherit;
+  color: inherit !important;
   text-decoration:none;
 }
 

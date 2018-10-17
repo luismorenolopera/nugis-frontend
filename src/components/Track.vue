@@ -13,7 +13,7 @@
 import Aplayer from 'vue-aplayer'
 
 export default {
-  name: 'Player',
+  name: 'AppTrack',
   components: {
     Aplayer
   },

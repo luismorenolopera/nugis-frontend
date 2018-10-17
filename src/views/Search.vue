@@ -19,7 +19,7 @@
           :key='track.id'
           xs12 sm6
         )
-          player(:track='track')
+          app-track(:track='track')
       //- loader
       atom-spinner(
         v-else
@@ -32,14 +32,14 @@
 
 <script>
 import { HTTP } from '@/http-common.js'
-import Player from '@/components/Player.vue'
+import AppTrack from '@/components/Track.vue'
 import { AtomSpinner } from 'epic-spinners'
 
 export default {
   name: 'Search',
   components: {
-    AtomSpinner,
-    Player
+    AppTrack,
+    AtomSpinner
   },
   data: () => ({
     searchValue: '',
