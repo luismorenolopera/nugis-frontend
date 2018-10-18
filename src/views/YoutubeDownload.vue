@@ -23,8 +23,8 @@
         @click='snackbar = false'
       ) Cerrar
     //- result video
-    v-flex(v-if='track' xs12)
-      v-card
+    v-flex(xs12)
+      v-card(v-if='track && !track.file')
         v-layout
           v-flex(xs5)
             v-img(
@@ -38,26 +38,31 @@
         v-divider(light)
         v-card-actions
           v-spacer
-          v-btn(v-if='!track.file' @click='download()') DESCARGAR
+          v-btn(@click='download()') DESCARGAR
             v-icon(right) fas fa-cloud-download-alt
-          audio(v-else controls)
-            source(:src='track.file' type='audio/mpeg')
-    //- loader
-    v-layout(v-else-if='loading' justify-center)
-      atom-spinner(
-        :size='60'
-        :animation-duration='800'
-        color='#ff1d5e'
+      app-track(
+        v-else-if='track && track.file'
+        :track='track'
       )
+    //- loader
+    atom-spinner(
+      v-if='loading'
+      :size='150'
+      :animation-duration='800'
+      color='#ff1d5e'
+      class='centered'
+    )
 </template>
 
 <script>
 import { HTTP } from '@/http-common.js'
+import AppTrack from '@/components/Track.vue'
 import { AtomSpinner } from 'epic-spinners'
 
 export default {
   name: 'YoutubeDownload',
   components: {
+    AppTrack,
     AtomSpinner
   },
   data: () => ({
