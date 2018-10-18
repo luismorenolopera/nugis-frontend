@@ -12,14 +12,15 @@
           @click='snackbar = false'
         ) Cerrar
     //- loader
-    v-layout(v-if='loading' justify-center)
-      atom-spinner(
-        :size='60'
-        :animation-duration='800'
-        color='#ff1d5e'
-      )
+    atom-spinner(
+      v-if='loading'
+      :size='150'
+      :animation-duration='800'
+      color='#ff1d5e'
+      class='centered'
+    )
     //- form
-    v-layout(row wrap)
+    v-layout(row wrap v-if='!loading')
       v-flex(xs12)
         v-text-field(
           v-model='title'
@@ -38,7 +39,7 @@
           counter
           maxlength='200'
           placeholder='https://image.ibb.co/n8C5De/image-1.png'
-          v-validate="'required|max:200|url'"
+          v-validate="'max:200|url'"
           :error-messages="errors.collect('imagen')"
         )
       v-flex(xs12)
