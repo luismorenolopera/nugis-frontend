@@ -65,16 +65,20 @@
           round
         ) SUBIR
           v-icon(right) fas fa-upload
+    //- player
+    app-track(v-if='track && !loading' :track='track')
 </template>
 
 <script>
 import { HTTP } from '@/http-common.js'
+import AppTrack from '@/components/Track.vue'
 import { AtomSpinner } from 'epic-spinners'
 
 export default {
   name: 'UploadLocalFile',
   components: {
-    AtomSpinner
+    AtomSpinner,
+    AppTrack
   },
   data: () => ({
     title: '',
@@ -82,7 +86,8 @@ export default {
     file: null,
     snackbar: false,
     snackbarMessage: '',
-    loading: false
+    loading: false,
+    track: null
   }),
   methods: {
     openFileDialog () {
@@ -114,8 +119,12 @@ export default {
       body.append('title', this.title)
       body.append('thumbnail', this.thumbnail)
       body.append('file', this.file)
+      this.title = ''
+      this.thumbnail = ''
+      this.file = null
       HTTP.post(url, body).then(response => {
         this.loading = false
+        this.track = response.data
         console.log(response)
       }).catch(e => {
         this.loading = false
