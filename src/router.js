@@ -64,18 +64,19 @@ const router = new Router({
 
 // requiresAuth Guard
 router.beforeEach((to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!auth.loggedIn()) {
-      // this route requires auth, check if logged in
-      // if not, redirect to landing page.
-      next({
-        path: '/'
-      })
-    } else {
-      next()
-    }
-  } else {
+  var requiresAuth = to.matched.some(record => record.meta.requiresAuth)
+  if (requiresAuth && !auth.isLogged()) {
+    // this route requires auth, check if logged in
+    // if not, redirect to landing page.
+    next({
+      path: '/'
+    })
+  } else if (!requiresAuth && auth.isLogged()) {
     // if is logged but the route not require login
+    next({
+      path: '/home'
+    })
+  } else {
     next()
   }
 })
