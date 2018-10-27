@@ -1,5 +1,5 @@
 export default {
-  loggedIn: () => {
-    return localStorage.token
+  isLogged: () => {
+    return !!localStorage.token
   }
 }

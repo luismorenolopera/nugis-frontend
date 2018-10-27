@@ -34,3 +34,8 @@ npm run test:e2e
 ```
 npm run test:unit
 ```
+
+### Docker
+```
+docker-compose up --build -d
+```

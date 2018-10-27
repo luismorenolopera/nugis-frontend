@@ -12,14 +12,15 @@
           @click='snackbar = false'
         ) Cerrar
     //- loader
-    v-layout(v-if='loading' justify-center)
-      atom-spinner(
-        :size='60'
-        :animation-duration='800'
-        color='#ff1d5e'
-      )
+    atom-spinner(
+      v-if='loading'
+      :size='150'
+      :animation-duration='800'
+      color='#ff1d5e'
+      class='centered'
+    )
     //- form
-    v-layout(row wrap)
+    v-layout(row wrap v-if='!loading')
       v-flex(xs12)
         v-text-field(
           v-model='title'
@@ -38,7 +39,7 @@
           counter
           maxlength='200'
           placeholder='https://image.ibb.co/n8C5De/image-1.png'
-          v-validate="'required|max:200|url'"
+          v-validate="'max:200|url'"
           :error-messages="errors.collect('imagen')"
         )
       v-flex(xs12)
@@ -64,16 +65,20 @@
           round
         ) SUBIR
           v-icon(right) fas fa-upload
+    //- player
+    app-track(v-if='track && !loading' :track='track')
 </template>
 
 <script>
 import { HTTP } from '@/http-common.js'
+import AppTrack from '@/components/Track.vue'
 import { AtomSpinner } from 'epic-spinners'
 
 export default {
   name: 'UploadLocalFile',
   components: {
-    AtomSpinner
+    AtomSpinner,
+    AppTrack
   },
   data: () => ({
     title: '',
@@ -81,7 +86,8 @@ export default {
     file: null,
     snackbar: false,
     snackbarMessage: '',
-    loading: false
+    loading: false,
+    track: null
   }),
   methods: {
     openFileDialog () {
@@ -113,8 +119,12 @@ export default {
       body.append('title', this.title)
       body.append('thumbnail', this.thumbnail)
       body.append('file', this.file)
+      this.title = ''
+      this.thumbnail = ''
+      this.file = null
       HTTP.post(url, body).then(response => {
         this.loading = false
+        this.track = response.data
         console.log(response)
       }).catch(e => {
         this.loading = false
