@@ -16,7 +16,7 @@
     "epic-spinners": "^1.0.3",
     "hls.js": "^0.11.0",
     "roboto-fontface": "*",
-    "vee-validate": "^2.1.0-beta.9",
+    "vee-validate": "^2.0.9",
     "vue": "^2.5.17",
     "vue-aplayer": "^1.6.1",
     "vue-router": "^3.0.1",

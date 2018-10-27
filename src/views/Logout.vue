@@ -8,8 +8,8 @@ export default {
   created: function () {
     this.$store.commit('setToken', { token: null })
     localStorage.clear()
-    this.$router.push('/')
     location.reload()
+    this.$router.push('/')
   }
 }
 </script>
