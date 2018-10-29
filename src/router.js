@@ -5,9 +5,7 @@ import Home from '@/views/Home.vue'
 import Library from '@/views/Library.vue'
 import Search from '@/views/Search.vue'
 import Upload from '@/views/Upload.vue'
-import Login from '@/views/Login.vue'
 import Logout from '@/views/Logout.vue'
-import SignUp from '@/views/SignUp.vue'
 import Landing from '@/views/Landing.vue'
 import PlayListDetail from '@/views/PlayListDetail.vue'
 
@@ -49,16 +47,6 @@ const router = new Router({
       name: 'upload',
       component: Upload,
       meta: { requiresAuth: true }
-    },
-    {
-      path: '/signup',
-      name: 'signup',
-      component: SignUp
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
     },
     {
       path: '/logout',
