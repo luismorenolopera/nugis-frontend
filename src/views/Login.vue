@@ -9,29 +9,35 @@ v-container
     transition='scale-transition'
     dismissible
   ) {{errorMessage}}
-  v-card
-    v-card-title(class='headline') Login
-    v-container
-      v-text-field(
-        v-model='username'
-        label='Usuario'
-        v-validate="'required'"
-        name='usuario'
-        :error-messages="errors.collect('usuario')"
-        @keyup.enter='validate'
-      )
-      v-text-field(
-        v-model='password'
-        label='Contraseña'
-        v-validate="'required'"
-        name='contraseña'
-        :append-icon="show ? 'fas fa-eye-slash' : 'fas fa-eye'"
-        :type="show ? 'text' : 'password'"
-        @click:append="show = !show"
-        :error-messages="errors.collect('contraseña')"
-        @keyup.enter='validate'
-      )
-    v-btn(type='submit' @click.stop.prevent='validate') Entrar
+  v-container(fluid fill-height)
+    v-layout(align-center justify-center)
+      v-flex(xs12 sm8 md4)
+        v-card(class="elevation-12")
+          v-card-title(class='headline') Login
+          v-card-text
+            v-form
+              v-text-field(
+                v-model='username'
+                label='Usuario'
+                v-validate="'required'"
+                name='usuario'
+                :error-messages="errors.collect('usuario')"
+                @keyup.enter='validate'
+              )
+              v-text-field(
+                v-model='password'
+                label='Contraseña'
+                v-validate="'required'"
+                name='contraseña'
+                :append-icon="show ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                :type="show ? 'text' : 'password'"
+                @click:append="show = !show"
+                :error-messages="errors.collect('contraseña')"
+                @keyup.enter='validate'
+              )
+          v-card-actions
+            v-spacer
+            v-btn(type='submit' @click.stop.prevent='validate') Entrar
 
 </template>
 
