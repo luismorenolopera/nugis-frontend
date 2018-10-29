@@ -9,6 +9,7 @@ import Login from '@/views/Login.vue'
 import Logout from '@/views/Logout.vue'
 import SignUp from '@/views/SignUp.vue'
 import Landing from '@/views/Landing.vue'
+import PlayListDetail from '@/views/PlayListDetail.vue'
 
 Vue.use(Router)
 
@@ -29,6 +30,12 @@ const router = new Router({
       path: '/library',
       name: 'library',
       component: Library,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/playlist',
+      name: '',
+      component: PlayListDetail,
       meta: { requiresAuth: true }
     },
     {
