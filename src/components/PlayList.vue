@@ -1,11 +1,14 @@
 <template lang="pug">
   aplayer(
+    v-if='normalizedTracks.length > 0'
     :music='normalizedTracks[0]'
     :list='normalizedTracks'
   )
 </template>
 <script>
+import { HTTP } from '@/http-common'
 import Aplayer from 'vue-aplayer'
+import { mapState } from 'vuex'
 
 export default {
   name: 'AppPlaylist',
@@ -13,7 +16,7 @@ export default {
     Aplayer
   },
   props: {
-    tracks: Array
+    id: Number
   },
   computed: {
     normalizedTracks () {
@@ -35,6 +38,17 @@ export default {
         tracks.push(newTrack)
       })
       return tracks
+    },
+    ...mapState(['tracks'])
+  },
+  created: function () {
+    if (this.$store.state.tracks.length === 0) {
+      let url = `music/playlists/${this.$route.query.id}/`
+      HTTP.get(url).then(response => {
+        this.$store.commit('setTracks', { tracks: response.data.tracks })
+      }).catch(e => {
+        console.log(e)
+      })
     }
   }
 }

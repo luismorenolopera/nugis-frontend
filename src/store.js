@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     token: localStorage.token,
-    tracks: []
+    tracks: [],
+    playlists: []
   },
   mutations: {
     setToken (state, payload) {

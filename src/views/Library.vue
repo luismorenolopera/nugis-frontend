@@ -5,7 +5,7 @@
         v-for='playlist in playlists'
         :key='playlist.id'
         class='pointer'
-        @click='openPlaylist(playlist.tracks)'
+        @click='openPlaylist(playlist)'
       )
         v-list-tile
           v-list-tile-action
@@ -31,9 +31,9 @@ export default {
     })
   },
   methods: {
-    openPlaylist (tracks) {
-      this.$store.commit('setTracks', { tracks: tracks })
-      this.$router.push('/playlist')
+    openPlaylist (playlist) {
+      this.$store.commit('setTracks', { tracks: playlist.tracks })
+      this.$router.push({ path: '/playlist', query: { id: playlist.id } })
     }
   }
 }
