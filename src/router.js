@@ -8,6 +8,7 @@ import Upload from '@/views/Upload.vue'
 import Logout from '@/views/Logout.vue'
 import Landing from '@/views/Landing.vue'
 import PlayListDetail from '@/views/PlayListDetail.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(Router)
 
@@ -52,6 +53,12 @@ const router = new Router({
       path: '/logout',
       name: 'logout',
       component: Logout,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '*',
+      name: 'not-found',
+      component: PageNotFound,
       meta: { requiresAuth: true }
     }
   ]
