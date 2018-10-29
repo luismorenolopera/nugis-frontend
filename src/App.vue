@@ -22,6 +22,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import { HTTP } from '@/http-common'
 
 export default {
   name: 'App',
@@ -60,6 +61,13 @@ export default {
   }),
   computed: {
     ...mapState(['token'])
+  },
+  created: function () {
+    HTTP.get('music/playlists/').then(response => {
+      this.$store.commit('setPlaylists', { playlists: response.data })
+    }).catch(e => {
+      console.log('error')
+    })
   }
 }
 

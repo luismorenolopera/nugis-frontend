@@ -1,7 +1,7 @@
 <template lang="pug">
   v-container
     //- list of playlists
-    v-list
+    v-list(v-if='playlists.length > 0')
       div(
         v-for='playlist in playlists'
         :key='playlist.id'
@@ -52,20 +52,18 @@
 
 <script>
 import { HTTP } from '@/http-common'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Library',
   data: () => ({
-    playlists: [],
     dialog: false,
     playlist: ''
   }),
   created: function () {
-    let url = 'music/playlists/'
-    HTTP.get(url).then(response => {
-      this.playlists = response.data
+    HTTP.get('music/playlists/').then(response => {
+      this.$store.commit('setPlaylists', { playlists: response.data })
     }).catch(e => {
-      console.log(e.response)
     })
   },
   methods: {
@@ -86,11 +84,15 @@ export default {
       HTTP.post(url, {
         name: this.playlist
       }).then(response => {
-        console.log(response)
+        this.$store.commit('addPlaylist', { playlist: response.data })
       }).catch(e => {
         console.log(e)
       })
+      this.playlist = ''
     }
+  },
+  computed: {
+    ...mapState(['playlists'])
   }
 }
 </script>

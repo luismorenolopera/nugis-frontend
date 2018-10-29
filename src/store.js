@@ -15,6 +15,12 @@ export default new Vuex.Store({
     },
     setTracks (state, payload) {
       state.tracks = payload.tracks
+    },
+    setPlaylists (state, payload) {
+      state.playlists = payload.playlists
+    },
+    addPlaylist (state, payload) {
+      state.playlists.push(payload.playlist)
     }
   },
   actions: {
