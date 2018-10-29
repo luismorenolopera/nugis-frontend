@@ -10,7 +10,9 @@
         v-list-tile
           v-list-tile-action
             v-icon fas fa-play
-          v-list-tile-content {{ playlist.name }}
+          v-list-tile-content
+            v-list-tile-title {{ playlist.name }}
+            v-list-tile-sub-title {{playlist.tracks.length}} canciones
         v-divider
 </template>
 
