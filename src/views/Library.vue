@@ -22,14 +22,14 @@
     )
       v-card
         v-card-title(
-          class='headline grey darken-4'
+          class='headline'
           primary-title
         ) Nueva playlist
         v-card-text
           v-text-field(
             v-model='playlist'
             label='playlist'
-            v-validate="'required'"
+            v-validate="'required|max:50'"
             :error-messages="errors.collect('playlist')"
             name='playlist'
             @keyup.enter='validate'
