@@ -7,7 +7,7 @@
         v-model='sheet'
         scrollable
       )
-        v-btn(slot='activator' icon @click='sheet = !sheet')
+        v-btn(slot='activator' icon @click='getPlaylists')
           v-icon(size='18') fas fa-plus
         v-list
           v-subheader(class='subheading') Guardar en
@@ -68,6 +68,17 @@ export default {
         track: this.track.id
       }).then(response => {
         console.log(response)
+      }).catch(e => {
+        console.log(e.response)
+      })
+    },
+    getPlaylists () {
+      this.sheet = true
+      let url = `music/playlists/track?id=${this.track.id}`
+      HTTP.get(url).then(response => {
+        response.data.map(item => {
+          this.selectedPlaylists.push(item.playlist)
+        })
       }).catch(e => {
         console.log(e.response)
       })
