@@ -7,22 +7,25 @@
         v-model='sheet'
         scrollable
       )
-        v-btn(slot='activator' icon @click='showPlaylists')
+        v-btn(slot='activator' icon @click='sheet = !sheet')
           v-icon(size='18') fas fa-plus
         v-list
           v-subheader(class='subheading') Guardar en
           v-divider
           v-container(fluid)
             v-checkbox(
+              v-model='selectedPlaylists'
               v-for='playlist in playlists'
               :key='playlist.id'
               :label='playlist.name'
+              :value='playlist.id'
             )
           v-divider
-          v-btn(block @click='sheet = !sheet') CERRAR
+          v-btn(block @click='save') CERRAR
 </template>
 
 <script>
+import { HTTP } from '@/http-common'
 import { mapState } from 'vuex'
 import Aplayer from 'vue-aplayer'
 
@@ -32,7 +35,8 @@ export default {
     Aplayer
   },
   data: () => ({
-    sheet: false
+    sheet: false,
+    selectedPlaylists: []
   }),
   props: {
     track: Object
@@ -55,8 +59,18 @@ export default {
     ...mapState(['playlists'])
   },
   methods: {
-    showPlaylists () {
-      this.sheet = true
+    save () {
+      this.sheet = false
+      console.log(this.selectedPlaylists)
+      let url = 'music/playlists/track'
+      HTTP.post(url, {
+        playlists: this.selectedPlaylists,
+        track: this.track.id
+      }).then(response => {
+        console.log(response)
+      }).catch(e => {
+        console.log(e.response)
+      })
     }
   }
 }
