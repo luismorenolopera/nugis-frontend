@@ -13,57 +13,62 @@
       transition='scale-transition'
       dismissible
     ) {{errorMessage}}
-    v-card
-      v-card-title(class='headline') Registrate
-      v-container
-        v-text-field(
-          v-model='username'
-          label='Usuario'
-          v-validate="'required'"
-          name='usuario'
-          :error-messages="errors.collect('usuario')"
-        )
-        v-text-field(
-          v-model='firstName'
-          label='Nombre'
-          v-validate="'required|max:30'"
-          maxlength='30'
-          counter
-          name='nombre'
-          :error-messages="errors.collect('nombre')"
-        )
-        v-text-field(
-          v-model='lastName'
-          label='Apellido'
-          v-validate="'required|max:30'"
-          maxlength='30'
-          counter
-          name='apellido'
-          :error-messages="errors.collect('apellido')"
-        )
-        v-text-field(
-          v-model='password'
-          label='Contraseña'
-          v-validate="'required|min:8'"
-          name='contraseña'
-          :append-icon="show ? 'fas fa-eye-slash' : 'fas fa-eye'"
-          :type="show ? 'text' : 'password'"
-          @click:append="show = !show"
-          :error-messages="errors.collect('contraseña')"
-        )
-        v-text-field(
-          v-model='passwordCheck'
-          label='Confirmar contraseña'
-          v-validate="{is: password}"
-          name='confirmación'
-          :append-icon="showCheck ? 'fas fa-eye-slash' : 'fas fa-eye'"
-          :type="showCheck ? 'text' : 'password'"
-          @click:append="showCheck = !showCheck"
-          :error-messages="errors.collect('confirmación')"
-          @keyup.enter='validate'
-        )
-      v-layout(align-center justify-end row)
-        v-btn(type='submit' @click.stop.prevent='validate') REGISTRARSE
+    v-container(fluid fill-height)
+      v-layout(align-center justify-center)
+        v-flex(xs12 sm8 md4)
+          v-card(class="elevation-12")
+            v-card-title(class='headline') Registrate
+            v-card-text
+              v-form
+                v-text-field(
+                  v-model='username'
+                  label='Usuario'
+                  v-validate="'required'"
+                  name='usuario'
+                  :error-messages="errors.collect('usuario')"
+                )
+                v-text-field(
+                  v-model='firstName'
+                  label='Nombre'
+                  v-validate="'required|max:30'"
+                  maxlength='30'
+                  counter
+                  name='nombre'
+                  :error-messages="errors.collect('nombre')"
+                )
+                v-text-field(
+                  v-model='lastName'
+                  label='Apellido'
+                  v-validate="'required|max:30'"
+                  maxlength='30'
+                  counter
+                  name='apellido'
+                  :error-messages="errors.collect('apellido')"
+                )
+                v-text-field(
+                  v-model='password'
+                  label='Contraseña'
+                  v-validate="'required|min:8'"
+                  name='contraseña'
+                  :append-icon="show ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                  :type="show ? 'text' : 'password'"
+                  @click:append="show = !show"
+                  :error-messages="errors.collect('contraseña')"
+                )
+                v-text-field(
+                  v-model='passwordCheck'
+                  label='Confirmar contraseña'
+                  v-validate="{is: password}"
+                  name='confirmación'
+                  :append-icon="showCheck ? 'fas fa-eye-slash' : 'fas fa-eye'"
+                  :type="showCheck ? 'text' : 'password'"
+                  @click:append="showCheck = !showCheck"
+                  :error-messages="errors.collect('confirmación')"
+                  @keyup.enter='validate'
+                )
+            v-card-actions
+              v-spacer
+              v-btn(type='submit' @click.stop.prevent='validate') REGISTRARSE
 </template>
 <script>
 import { HTTP } from '@/http-common.js'

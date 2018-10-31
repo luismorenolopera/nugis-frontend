@@ -5,10 +5,10 @@ import Home from '@/views/Home.vue'
 import Library from '@/views/Library.vue'
 import Search from '@/views/Search.vue'
 import Upload from '@/views/Upload.vue'
-import Login from '@/views/Login.vue'
 import Logout from '@/views/Logout.vue'
-import SignUp from '@/views/SignUp.vue'
 import Landing from '@/views/Landing.vue'
+import PlayListDetail from '@/views/PlayListDetail.vue'
+import PageNotFound from '@/views/PageNotFound.vue'
 
 Vue.use(Router)
 
@@ -32,6 +32,12 @@ const router = new Router({
       meta: { requiresAuth: true }
     },
     {
+      path: '/playlist',
+      name: '',
+      component: PlayListDetail,
+      meta: { requiresAuth: true }
+    },
+    {
       path: '/search',
       name: 'search',
       component: Search,
@@ -44,19 +50,15 @@ const router = new Router({
       meta: { requiresAuth: true }
     },
     {
-      path: '/signup',
-      name: 'signup',
-      component: SignUp
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
       path: '/logout',
       name: 'logout',
       component: Logout,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '*',
+      name: 'not-found',
+      component: PageNotFound,
       meta: { requiresAuth: true }
     }
   ]
