@@ -1,104 +1,63 @@
-<template lang="pug">
-  v-container
-    //- list of playlists
-    v-list(v-if='playlists.length > 0')
-      div(
-        v-for='playlist in playlists'
-        :key='playlist.id'
-        class='pointer'
-        @click='openPlaylist(playlist)'
-      )
-        v-list-tile
-          v-list-tile-action
-            v-icon fas fa-play
-          v-list-tile-content
-            v-list-tile-title {{ playlist.name }}
-            v-list-tile-sub-title {{playlist.tracks.length}} canciones
-        v-divider
-    //-dialog add playlist
-    v-dialog(
-      v-model='dialog'
-      max-width='500px'
-    )
-      v-card
-        v-card-title(
-          class='headline'
-          primary-title
-        ) Nueva playlist
-        v-card-text
-          v-text-field(
-            v-model='playlist'
-            label='playlist'
-            v-validate="'required|max:50'"
-            :error-messages="errors.collect('playlist')"
-            name='playlist'
-            @keyup.enter='validate'
-          )
-        v-card-actions
-          v-spacer
-          v-btn(flat color='primary' @click.native='validate') Crear
-    //- button add playlist
-    v-btn(
-      absolute
-      fab
-      bottom
-      right
-      color="primary"
-      @click="dialog = !dialog"
-    )
-      span(class='display-1 font-weight-bold') +
+<script setup>
+import { onMounted, ref } from 'vue'
+import { usePlaylists } from '@/stores/playlists'
+import { toast } from '@/toast'
+import { coverGradient } from '@/util'
+import Icon from '@/components/Icon.vue'
 
-</template>
+const store = usePlaylists()
+const loading = ref(!store.loaded)
+const name = ref('')
+const creating = ref(false)
 
-<script>
-import { HTTP } from '@/http-common'
-import { mapState } from 'vuex'
+onMounted(async () => {
+  try { await store.load(true) } catch { toast('No se pudieron cargar tus playlists', 'error') } finally { loading.value = false }
+})
 
-export default {
-  name: 'Library',
-  data: () => ({
-    dialog: false,
-    playlist: ''
-  }),
-  created: function () {
-    HTTP.get('music/playlists/').then(response => {
-      this.$store.commit('setPlaylists', { playlists: response.data })
-    }).catch(e => {
-    })
-  },
-  methods: {
-    openPlaylist (playlist) {
-      this.$store.commit('setTracks', { tracks: playlist.tracks })
-      this.$router.push({ path: '/playlist', query: { id: playlist.id } })
-    },
-    validate () {
-      if (this.errors.items.length > 0) return
-      return this.$validator.validateAll().then((result) => {
-        if (!result) return
-        this.addPlaylist()
-      })
-    },
-    addPlaylist () {
-      this.dialog = false
-      let url = 'music/playlists/'
-      HTTP.post(url, {
-        name: this.playlist
-      }).then(response => {
-        this.$store.commit('addPlaylist', { playlist: response.data })
-      }).catch(e => {
-        console.log(e)
-      })
-      this.playlist = ''
-    }
-  },
-  computed: {
-    ...mapState(['playlists'])
-  }
+async function create () {
+  const n = name.value.trim()
+  if (!n) return
+  creating.value = true
+  try { await store.create(n.slice(0, 50)); name.value = '' } catch { toast('No se pudo crear la playlist', 'error') } finally { creating.value = false }
 }
 </script>
 
+<template>
+  <div>
+    <div class="mono-label">// memoria</div>
+    <h1>Tu biblioteca</h1>
+    <form class="new" @submit.prevent="create">
+      <input v-model="name" class="input" maxlength="50" placeholder="Nombre de la nueva playlist" aria-label="Nombre de la nueva playlist">
+      <button class="btn magenta" type="submit" :disabled="!name.trim() || creating"><Icon name="plus" :size="16" /> Crear</button>
+    </form>
+    <div v-if="loading" class="loader"><span /><span /><span /><span /></div>
+    <p v-else-if="!store.items.length" class="empty">Aún no tienes playlists. Crea una arriba o usa <b>+</b> en cualquier canción.</p>
+    <ul v-else class="grid">
+      <li v-for="pl in store.items" :key="pl.id">
+        <RouterLink :to="{ name: 'playlist', params: { id: pl.id } }" class="pl panel">
+          <div class="art" :style="{ background: coverGradient(pl.name) }">
+            <span class="count">{{ pl.tracks.length }}</span>
+          </div>
+          <div class="meta">
+            <div class="name">{{ pl.name }}</div>
+            <div class="mono-label">{{ pl.tracks.length }} {{ pl.tracks.length === 1 ? 'canción' : 'canciones' }}</div>
+          </div>
+        </RouterLink>
+      </li>
+    </ul>
+  </div>
+</template>
+
 <style scoped>
-.pointer {
-  cursor: pointer;
+.new { display: flex; gap: 10px; margin-bottom: 24px; max-width: 560px; }
+.grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr)); }
+.pl { display: block; color: inherit; transition: transform 0.15s, border-color 0.15s; }
+.pl:hover { transform: translateY(-3px); border-color: var(--line-strong); }
+.art { aspect-ratio: 16 / 10; display: grid; place-items: end start; padding: 12px; }
+.count { font-family: var(--font-display); font-size: 2rem; color: #fff; text-shadow: 0 0 12px rgba(0, 0, 0, 0.6); }
+.meta { padding: 10px 14px 14px; }
+.name { font-weight: 700; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+@media (max-width: 520px) {
+  .grid { grid-template-columns: 1fr 1fr; }
 }
 </style>

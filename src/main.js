@@ -1,25 +1,19 @@
-import '@babel/polyfill'
-import Vue from 'vue'
-import '@/plugins/vuetify'
-import App from '@/App.vue'
-import router from '@/router'
-import store from '@/store'
-import 'roboto-fontface/css/roboto/roboto-fontface.css'
-import '@fortawesome/fontawesome-free/css/all.css'
-import VeeValidate from 'vee-validate'
-import messages from '../node_modules/vee-validate/dist/locale/es'
+import { createApp } from 'vue'
+import { createPinia } from 'pinia'
+import '@fontsource/orbitron/latin-700.css'
+import './styles/main.css'
+import App from './App.vue'
+import router from './router'
+import { setUnauthorizedHandler } from './api'
+import { useAuth } from './stores/auth'
 
-Vue.config.productionTip = false
+const app = createApp(App)
+app.use(createPinia())
+app.use(router)
 
-Vue.use(VeeValidate, {
-  locale: 'es',
-  dictionary: {
-    es: messages
-  }
+setUnauthorizedHandler(() => {
+  useAuth().logout()
+  router.push({ name: 'landing' })
 })
 
-new Vue({
-  router,
-  store,
-  render: h => h(App)
-}).$mount('#app')
+app.mount('#app')

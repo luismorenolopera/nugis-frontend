@@ -1,88 +1,62 @@
-<template lang="pug">
-  v-app(v-if='token' dark)
-    v-navigation-drawer(v-model='drawer' clipped fixed app)
-      v-list(dense v-for='(item, index) in items' :key='index')
-        router-link(v-if='item.path' :to='item.path')
-          v-list-tile
-            v-list-tile-action
-              v-icon {{item.icon}}
-            v-list-tile-content
-              v-list-tile-title {{item.title}}
-        v-divider(v-else-if='item.divider' :key='index')
-    v-toolbar(app fixed clipped-left)
-      v-toolbar-side-icon(@click.stop='drawer = !drawer')
-      v-toolbar-title Nugis
-    v-content
-      router-view
-    v-footer(app fixed)
-      span © Nugis - 2018
-  v-app(v-else dark)
-    router-view
-</template>
+<script setup>
+import { computed, defineAsyncComponent, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useAuth } from './stores/auth'
+import { usePlayer } from './stores/player'
+import { usePlaylists } from './stores/playlists'
+import AppNav from './components/AppNav.vue'
+import PlayerBar from './components/PlayerBar.vue'
+import ToastHost from './components/ToastHost.vue'
 
-<script>
-import { mapState } from 'vuex'
-import { HTTP } from '@/http-common'
+const PlayerDeck = defineAsyncComponent(() => import('./components/PlayerDeck.vue'))
 
-export default {
-  name: 'App',
-  data: () => ({
-    drawer: null,
-    items: [
-      {
-        title: 'Buscar',
-        icon: 'fas fa-search',
-        path: '/search'
-      },
-      {
-        title: 'Inicio',
-        icon: 'fas fa-home',
-        path: '/home'
-      },
-      {
-        title: 'Tu biblioteca',
-        icon: 'fas fa-book',
-        path: '/library'
-      },
-      {
-        title: 'Agregar',
-        icon: 'fas fa-upload',
-        path: '/upload'
-      },
-      {
-        divider: true
-      },
-      {
-        title: 'Salir',
-        icon: 'fas fa-sign-out-alt',
-        path: '/logout'
-      }
-    ]
-  }),
-  computed: {
-    ...mapState(['token'])
-  },
-  created: function () {
-    HTTP.get('music/playlists/').then(response => {
-      this.$store.commit('setPlaylists', { playlists: response.data })
-    }).catch(e => {
-      console.log('error')
-    })
-  }
-}
+const auth = useAuth()
+const player = usePlayer()
+const playlists = usePlaylists()
+const route = useRoute()
 
+const shell = computed(() => auth.isLogged && route.name !== 'landing')
+
+onMounted(() => {
+  player.init()
+  if (auth.isLogged) auth.fetchMe()
+})
+
+watch(() => auth.isLogged, (logged) => {
+  if (!logged) { player.stop(); playlists.reset() }
+})
 </script>
 
+<template>
+  <div :class="['app', { shell, 'has-player': shell && player.current }]">
+    <AppNav v-if="shell" />
+    <main class="main">
+      <RouterView v-slot="{ Component }">
+        <Transition name="page" mode="out-in">
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
+    </main>
+    <PlayerBar v-if="shell && player.current" />
+    <PlayerDeck v-if="shell && player.current && player.expanded" />
+    <ToastHost />
+  </div>
+</template>
+
 <style>
-a {
-  color: inherit !important;
-  text-decoration:none;
+.app { min-height: 100dvh; }
+.main { padding: 24px clamp(16px, 4vw, 48px) 32px; max-width: 1400px; margin: 0 auto; }
+
+.app.shell { --nav-h: 60px; }
+.app.shell .main { padding-bottom: calc(var(--nav-h) + 32px + env(safe-area-inset-bottom)); }
+.app.shell.has-player .main { padding-bottom: calc(var(--nav-h) + var(--player-h) + 32px + env(safe-area-inset-bottom)); }
+
+@media (min-width: 900px) {
+  .app.shell { --nav-h: 0px; }
+  .app.shell .main { margin-left: var(--sidebar-w); max-width: none; }
 }
 
-.centered {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
+.page-enter-active, .page-leave-active { transition: opacity 0.15s, transform 0.15s; }
+.page-enter-from { opacity: 0; transform: translateY(6px); }
+.page-leave-to { opacity: 0; }
 </style>

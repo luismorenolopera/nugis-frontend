@@ -1,86 +1,25 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import auth from '@/auth'
-import Home from '@/views/Home.vue'
-import Library from '@/views/Library.vue'
-import Search from '@/views/Search.vue'
-import Upload from '@/views/Upload.vue'
-import Logout from '@/views/Logout.vue'
-import Landing from '@/views/Landing.vue'
-import PlayListDetail from '@/views/PlayListDetail.vue'
-import PageNotFound from '@/views/PageNotFound.vue'
+import { createRouter, createWebHistory } from 'vue-router'
+import { useAuth } from './stores/auth'
+import Home from './views/Home.vue'
 
-Vue.use(Router)
-
-const router = new Router({
+const router = createRouter({
+  history: createWebHistory(),
   routes: [
-    {
-      path: '/',
-      name: 'landing',
-      component: Landing
-    },
-    {
-      path: '/home',
-      name: 'home',
-      component: Home,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/library',
-      name: 'library',
-      component: Library,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/playlist',
-      name: '',
-      component: PlayListDetail,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/search',
-      name: 'search',
-      component: Search,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/upload',
-      name: 'upload',
-      component: Upload,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '/logout',
-      name: 'logout',
-      component: Logout,
-      meta: { requiresAuth: true }
-    },
-    {
-      path: '*',
-      name: 'not-found',
-      component: PageNotFound,
-      meta: { requiresAuth: true }
-    }
-  ]
+    { path: '/', name: 'landing', component: () => import('./views/Landing.vue'), meta: { public: true } },
+    { path: '/home', name: 'home', component: Home },
+    { path: '/search', name: 'search', component: () => import('./views/Search.vue') },
+    { path: '/library', name: 'library', component: () => import('./views/Library.vue') },
+    { path: '/playlist/:id', name: 'playlist', component: () => import('./views/PlaylistDetail.vue'), props: true },
+    { path: '/upload', name: 'upload', component: () => import('./views/Upload.vue') },
+    { path: '/:pathMatch(.*)*', name: 'not-found', component: () => import('./views/NotFound.vue'), meta: { public: true } }
+  ],
+  scrollBehavior: () => ({ top: 0 })
 })
 
-// requiresAuth Guard
-router.beforeEach((to, from, next) => {
-  var requiresAuth = to.matched.some(record => record.meta.requiresAuth)
-  if (requiresAuth && !auth.isLogged()) {
-    // this route requires auth, check if logged in
-    // if not, redirect to landing page.
-    next({
-      path: '/'
-    })
-  } else if (!requiresAuth && auth.isLogged()) {
-    // if is logged but the route not require login
-    next({
-      path: '/home'
-    })
-  } else {
-    next()
-  }
+router.beforeEach((to) => {
+  const auth = useAuth()
+  if (!to.meta.public && !auth.isLogged) return { name: 'landing' }
+  if (to.name === 'landing' && auth.isLogged) return { name: 'home' }
 })
 
 export default router
